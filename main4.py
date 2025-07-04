@@ -151,7 +151,7 @@ def process_pdf(pdf_path="data/input.pdf", progress_callback=None, log_callback=
     db_config = {
         "host": "localhost",
         "user": "root",
-        "password": "Password@123**",
+        "password": "Password@123",
         "database": "voter_db",
     }
 
