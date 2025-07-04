@@ -136,7 +136,7 @@ def save_entry_to_db_and_image(result, sequence, sequenceOCR, vidhansabha, image
 
         # Create table if not exists with explicit UTF-8 settings
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS voter_entries_2 (
+        CREATE TABLE IF NOT EXISTS voter_entries (
             id INT AUTO_INCREMENT PRIMARY KEY,
             sequence INT ,
             sequenceOCR VARCHAR(20),
@@ -175,7 +175,7 @@ def save_entry_to_db_and_image(result, sequence, sequenceOCR, vidhansabha, image
 
         # Insert or update entry
         insert_query = """
-        INSERT INTO voter_entries_2 (
+        INSERT INTO voter_entries (
             sequence,sequenceOCR, voterId, name, relation, relationName, houseNumber, age, gender, fileName
         ) VALUES (%s, %s,  %s, %s, %s, %s, %s, %s, %s, %s)
         ON DUPLICATE KEY UPDATE 
@@ -195,7 +195,7 @@ def save_entry_to_db_and_image(result, sequence, sequenceOCR, vidhansabha, image
         
         
         # Verify the insert by reading it back
-        cursor.execute("SELECT name, relationName, fileName FROM voter_entries_2 WHERE sequence = %s", (sequence,))
+        cursor.execute("SELECT name, relationName, fileName FROM voter_entries WHERE sequence = %s", (sequence,))
         result_row = cursor.fetchone()
         
 
@@ -242,13 +242,13 @@ def fix_database_encoding(db_config):
         cursor = conn.cursor()
         
         # Drop and recreate table with proper encoding
-        cursor.execute("DROP TABLE IF EXISTS voter_entries_2_backup;")
-        cursor.execute("CREATE TABLE voter_entries_2_backup AS SELECT * FROM voter_entries_2;")
-        cursor.execute("DROP TABLE voter_entries_2;")
+        cursor.execute("DROP TABLE IF EXISTS voter_entries_backup;")
+        cursor.execute("CREATE TABLE voter_entries_backup AS SELECT * FROM voter_entries;")
+        cursor.execute("DROP TABLE voter_entries;")
         
         # Create new table with proper charset
         cursor.execute("""
-        CREATE TABLE voter_entries_2 (
+        CREATE TABLE voter_entries (
             id INT AUTO_INCREMENT PRIMARY KEY,
             sequence INT,
             sequenceOCR VARCHAR(10),
